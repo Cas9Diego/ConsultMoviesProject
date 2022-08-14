@@ -108,7 +108,7 @@ class ViewController: UIViewController {
             if textField1 == userName && textField2 == passWord {
                 wrongLogInLabel.text = ""
                 
-           let mvc = MoviesViewController()
+           let mvc = MoviesGridViewController()
 //                mvc.view.backgroundColor = .red
                 mvc.navigationItem.hidesBackButton = true
                 mvc.navigationController?.setNavigationBarHidden(false, animated: true)
