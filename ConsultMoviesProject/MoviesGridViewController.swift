@@ -29,6 +29,7 @@ class MoviesGridViewController: UIViewController {
     let imageButtonsCornerRadius: CGFloat = 10
     let topButtonFontSize: CGFloat = 10
     var detailsList: [DetailsList] = []
+    let APIkey: String = ""
     
     
     
@@ -132,7 +133,7 @@ class MoviesGridViewController: UIViewController {
             
             for _ in 0...1 {
                 
-                let urlMovieDetails = "https://api.themoviedb.org/3/movie/"+"\(results[movieURLSelector ].id)"+"?api_key=a542477d1e1e86b87f271f115770d255"
+                let urlMovieDetails = "https://api.themoviedb.org/3/movie/"+"\(results[movieURLSelector ].id)"+"?api_key=\(APIkey)"
                 
                 DispatchQueue.global().async {
                     
