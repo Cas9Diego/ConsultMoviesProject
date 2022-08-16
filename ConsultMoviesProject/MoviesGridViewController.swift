@@ -122,33 +122,26 @@ class MoviesGridViewController: UIViewController {
         // add stack view to scrollView
         scrollView.addSubview(verticalStackView)
         
-        // now let's create the buttons and add them
         var movieURLSelector = 0
-        var idx = 0
+        var counter = 0
         
         for _ in 0..<results.count/2 {
             
-            
-            // create a "row" stack view
             let rowStack = UIStackView()
-            // add it to the vertical stack view
             verticalStackView.addArrangedSubview(rowStack)
             
             for _ in 0...1 {
                 
                 let urlMovieDetails = "https://api.themoviedb.org/3/movie/"+"\(results[movieURLSelector ].id)"+"?api_key=a542477d1e1e86b87f271f115770d255"
                 
-                print("About to save list elements")
-                
-                DispatchQueue.main.async {
+                DispatchQueue.global().async {
                     
-                    if let url = URL(string: urlMovieDetails) {
+                    if let url = URL(string: urlMovieDetails) { 
                         
                         if let data = try? Data(contentsOf: url) //This fetches the data from the API
                         {
                             self.parseDetails(json: data)
                             let imageUrlString = URL(string: "https://image.tmdb.org/t/p/w500/"+self.backdrop_path)
-                            //                        print(imageUrlString, "TheURL")
                             self.urlsList.append(imageUrlString)
                             
                             var detailsStruct = DetailsList()
@@ -189,7 +182,7 @@ class MoviesGridViewController: UIViewController {
                                     tapMovieButton.setImage(self.theImage, for: .normal)
                                     tapMovieButton.layer.cornerRadius = self.imageButtonsCornerRadius
                                     tapMovieButton.clipsToBounds = true
-                                    tapMovieButton.setTitle("\(idx)", for: .normal)
+                                    tapMovieButton.setTitle("\(counter)", for: .normal)
                                     //                                    movieInfo.mask = tapMovieButton
                                     
                                     tapMovieButton.addTarget(self, action: #selector(self.movieButtonAction), for: .touchUpInside)
@@ -198,7 +191,7 @@ class MoviesGridViewController: UIViewController {
                                     //                                    tapMovieButton.addSubview(movieInfo)
                                     tapMovieButton.addSubview(movieInfo)
                                     rowStack.addArrangedSubview(tapMovieButton)
-                                    idx += 1
+                                    counter += 1
                                     // buttons size
                                     let widthProportion: CGFloat = 2/6
                                     NSLayoutConstraint.activate([
@@ -215,9 +208,6 @@ class MoviesGridViewController: UIViewController {
             }
         }
         
-        // finally, let's set our constraints
-        
-        // respect safe-area
         let safeG = view.safeAreaLayoutGuide
         let buttonWidthAnchor: CGFloat = UIScreen.main.bounds.width*3/16
         let buttonLeadingAnchor: CGFloat = (UIScreen.main.bounds.width/8)
@@ -242,7 +232,6 @@ class MoviesGridViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: safeG.bottomAnchor, constant: -8.0),
             
             // constrain vertical stack view to scrollView Content Layout Guide
-            //  8-pts all around (so we have a little "padding")
             verticalStackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 8.0),
             verticalStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: (UIScreen.main.bounds.width/6)),
             verticalStackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -8.0),  verticalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)

@@ -15,8 +15,8 @@ class ViewController: UIViewController {
     var textField2: UITextField!
     var logInButton: UIButton!
     var wrongLogInLabel: UILabel!
-    var userName = "1"
-    var passWord = "1"
+    var userName = "CoppelTester"
+    var passWord = "12345"
     
     override func loadView() {
         view = UIView()
@@ -85,8 +85,6 @@ class ViewController: UIViewController {
                                      textField2.centerXAnchor.constraint(equalTo: view.centerXAnchor), textField2.centerYAnchor.constraint(equalTo: textField1.bottomAnchor, constant: 50),textField2.heightAnchor.constraint(equalToConstant: 50), textField2.widthAnchor.constraint(equalToConstant: 300),
                                      
                                      logInButton.centerXAnchor.constraint(equalTo: view.centerXAnchor), logInButton.centerYAnchor.constraint(equalTo: textField2.bottomAnchor, constant: 50),logInButton.heightAnchor.constraint(equalToConstant: 50), logInButton.widthAnchor.constraint(equalToConstant: 300),
-                                     
-                                     //
                                     ])
         
         
