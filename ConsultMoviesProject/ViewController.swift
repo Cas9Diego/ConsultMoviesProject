@@ -92,6 +92,12 @@ class ViewController: UIViewController {
         
 
     }
+    
+    override func viewDidLoad() {
+        textField1.delegate = self // Hide keyboard when hit return key
+        textField2.delegate = self // Hide keyboard when hit return key
+        
+    }
 
     
     
