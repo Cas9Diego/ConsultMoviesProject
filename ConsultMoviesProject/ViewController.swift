@@ -15,13 +15,13 @@ class ViewController: UIViewController {
     var textField2: UITextField!
     var logInButton: UIButton!
     var wrongLogInLabel: UILabel!
-    var userName = "C"
+    var userName = "1"
     var passWord = "1"
     
     override func loadView() {
         view = UIView()
         
-      
+        
         let mrRobotImage = "MrRobot"
         let image = UIImage(named: mrRobotImage)
         mrRobotImageView = UIImageView(image: image!)
@@ -75,22 +75,22 @@ class ViewController: UIViewController {
         view.addSubview(wrongLogInLabel)
         
         
-       NSLayoutConstraint.activate([mrRobotImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-        mrRobotImageView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: -90), mrRobotImageView.heightAnchor.constraint(equalToConstant: 250), mrRobotImageView.widthAnchor.constraint(equalToConstant: 250),
+        NSLayoutConstraint.activate([mrRobotImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+                                     mrRobotImageView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: -90), mrRobotImageView.heightAnchor.constraint(equalToConstant: 250), mrRobotImageView.widthAnchor.constraint(equalToConstant: 250),
                                      
-            dBImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor), dBImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -110), dBImageView.heightAnchor.constraint(equalToConstant: 100), dBImageView.widthAnchor.constraint(equalToConstant: 100),
+                                     dBImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor), dBImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -110), dBImageView.heightAnchor.constraint(equalToConstant: 100), dBImageView.widthAnchor.constraint(equalToConstant: 100),
                                      
-            textField1.centerXAnchor.constraint(equalTo: view.centerXAnchor), textField1.centerYAnchor.constraint(equalTo: dBImageView.bottomAnchor, constant: 50),textField1.heightAnchor.constraint(equalToConstant: 50), textField1.widthAnchor.constraint(equalToConstant: 300),
+                                     textField1.centerXAnchor.constraint(equalTo: view.centerXAnchor), textField1.centerYAnchor.constraint(equalTo: dBImageView.bottomAnchor, constant: 50),textField1.heightAnchor.constraint(equalToConstant: 50), textField1.widthAnchor.constraint(equalToConstant: 300),
                                      
-            textField2.centerXAnchor.constraint(equalTo: view.centerXAnchor), textField2.centerYAnchor.constraint(equalTo: textField1.bottomAnchor, constant: 50),textField2.heightAnchor.constraint(equalToConstant: 50), textField2.widthAnchor.constraint(equalToConstant: 300),
-                    
-            logInButton.centerXAnchor.constraint(equalTo: view.centerXAnchor), logInButton.centerYAnchor.constraint(equalTo: textField2.bottomAnchor, constant: 50),logInButton.heightAnchor.constraint(equalToConstant: 50), logInButton.widthAnchor.constraint(equalToConstant: 300),
-
-//
+                                     textField2.centerXAnchor.constraint(equalTo: view.centerXAnchor), textField2.centerYAnchor.constraint(equalTo: textField1.bottomAnchor, constant: 50),textField2.heightAnchor.constraint(equalToConstant: 50), textField2.widthAnchor.constraint(equalToConstant: 300),
+                                     
+                                     logInButton.centerXAnchor.constraint(equalTo: view.centerXAnchor), logInButton.centerYAnchor.constraint(equalTo: textField2.bottomAnchor, constant: 50),logInButton.heightAnchor.constraint(equalToConstant: 50), logInButton.widthAnchor.constraint(equalToConstant: 300),
+                                     
+                                     //
                                     ])
         
         
-
+        
     }
     
     override func viewDidLoad() {
@@ -98,7 +98,7 @@ class ViewController: UIViewController {
         textField2.delegate = self // Hide keyboard when hit return key
         
     }
-
+    
     
     
     @objc func logInButtonAction(sender: UIButton!) {
@@ -111,28 +111,28 @@ class ViewController: UIViewController {
         if textField1 != ""{
             if textField2 != "" {
                 
-            if textField1 == userName && textField2 == passWord {
-                wrongLogInLabel.text = ""
-                
-           let mvc = MoviesGridViewController()
-//                mvc.view.backgroundColor = .red
-                mvc.navigationItem.hidesBackButton = true
-                mvc.navigationController?.setNavigationBarHidden(false, animated: true)
-                navigationController?.pushViewController(mvc, animated: true)
-               
-                
-            } else {
-                wrongLogInLabel.text = " Wrong Username or password"
+                if textField1 == userName && textField2 == passWord {
+                    wrongLogInLabel.text = ""
+                    
+                    let mvc = MoviesGridViewController()
+                    //                mvc.view.backgroundColor = .red
+                    mvc.navigationItem.hidesBackButton = true
+                    mvc.navigationController?.setNavigationBarHidden(false, animated: true)
+                    navigationController?.pushViewController(mvc, animated: true)
+                    
+                    
+                } else {
+                    wrongLogInLabel.text = " Wrong Username or password"
+                    wrongLogInLabel.textColor = .red
+                }
+            } else {  wrongLogInLabel.text = "Empty Password"
                 wrongLogInLabel.textColor = .red
             }
-        } else {  wrongLogInLabel.text = "Empty Password"
-            wrongLogInLabel.textColor = .red
-        }
         } else {  wrongLogInLabel.text = "Empty UserName"
             wrongLogInLabel.textColor = .red
         }
     }
     
-
+    
 }
 

@@ -12,6 +12,10 @@ class MoviesGridViewController: UIViewController {
     var results = [PopularMoviesData]()
     var release_date: String = ""
     var backdrop_path: String = ""
+    var overview: String = ""
+    var poster_path: String = ""
+    var original_title: String = ""
+    var vote_average: Double = 0
     let scrollView = UIScrollView(frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
     var theImage: UIImage!
     var urlsList: [URL?] = []
@@ -24,6 +28,7 @@ class MoviesGridViewController: UIViewController {
     let topButtonsCornerRadius: CGFloat = 5
     let imageButtonsCornerRadius: CGFloat = 10
     let topButtonFontSize: CGFloat = 10
+    var detailsList: [DetailsList] = []
     
     
     
@@ -118,6 +123,7 @@ class MoviesGridViewController: UIViewController {
         scrollView.addSubview(verticalStackView)
         
         // now let's create the buttons and add them
+        var movieURLSelector = 0
         var idx = 0
         
         for _ in 0..<results.count/2 {
@@ -130,7 +136,7 @@ class MoviesGridViewController: UIViewController {
             
             for _ in 0...1 {
                 
-                let urlMovieDetails = "https://api.themoviedb.org/3/movie/"+"\(results[idx].id)"+"?api_key=a542477d1e1e86b87f271f115770d255"
+                let urlMovieDetails = "https://api.themoviedb.org/3/movie/"+"\(results[movieURLSelector ].id)"+"?api_key=a542477d1e1e86b87f271f115770d255"
                 
                 print("About to save list elements")
                 
@@ -144,6 +150,16 @@ class MoviesGridViewController: UIViewController {
                             let imageUrlString = URL(string: "https://image.tmdb.org/t/p/w500/"+self.backdrop_path)
                             //                        print(imageUrlString, "TheURL")
                             self.urlsList.append(imageUrlString)
+                            
+                            var detailsStruct = DetailsList()
+                            detailsStruct.backdrop_path = self.backdrop_path
+                            detailsStruct.overview = self.overview
+                            detailsStruct.release_date = self.release_date
+                            detailsStruct.poster_path = "https://image.tmdb.org/t/p/w500"+"\(self.poster_path)"
+                            detailsStruct.original_title = self.original_title
+                            detailsStruct.vote_average = self.vote_average
+                            
+                            self.detailsList.append(detailsStruct)
                             
                             
                             // Start background thread so that image loading does not make app unresponsive
@@ -165,38 +181,37 @@ class MoviesGridViewController: UIViewController {
                                     imageView.clipsToBounds = true
                                     self.theImage = imageView.image
                                     
-                         
+                                    
                                     let movieInfo = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width*1/3, height: UIScreen.main.bounds.width*2/3))
-                                    movieInfo.backgroundColor = .white
+                                    movieInfo.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.1)
                                     let tapMovieButton = UIButton()
                                     tapMovieButton.backgroundColor = .gray
-                                    tapMovieButton.setTitle("\(idx)", for: .normal)
                                     tapMovieButton.setImage(self.theImage, for: .normal)
                                     tapMovieButton.layer.cornerRadius = self.imageButtonsCornerRadius
                                     tapMovieButton.clipsToBounds = true
-                                    self.view.addSubview(tapMovieButton)
+                                    tapMovieButton.setTitle("\(idx)", for: .normal)
+                                    //                                    movieInfo.mask = tapMovieButton
                                     
-                                    tapMovieButton.addTarget(self, action: #selector(self.buttonAction), for: .touchUpInside)
+                                    tapMovieButton.addTarget(self, action: #selector(self.movieButtonAction), for: .touchUpInside)
                                     
                                     // add button to row stack view
-//                                    tapMovieButton.addSubview(movieInfo)
+                                    //                                    tapMovieButton.addSubview(movieInfo)
+                                    tapMovieButton.addSubview(movieInfo)
                                     rowStack.addArrangedSubview(tapMovieButton)
-                                    
+                                    idx += 1
                                     // buttons size
                                     let widthProportion: CGFloat = 2/6
                                     NSLayoutConstraint.activate([
                                         tapMovieButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width*widthProportion),
                                         tapMovieButton.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width*widthProportion)
+                                   
                                     ])
                                 }
                             }
-                            
-                            self.view = self.view
-                            
                         }
                     }
                 }
-                idx += 1
+                movieURLSelector+=1
             }
         }
         
@@ -206,7 +221,7 @@ class MoviesGridViewController: UIViewController {
         let safeG = view.safeAreaLayoutGuide
         let buttonWidthAnchor: CGFloat = UIScreen.main.bounds.width*3/16
         let buttonLeadingAnchor: CGFloat = (UIScreen.main.bounds.width/8)
-
+        
         
         NSLayoutConstraint.activate([
             popularButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: buttonLeadingAnchor), popularButton.centerYAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 50),popularButton.heightAnchor.constraint(equalToConstant: 25), popularButton.widthAnchor.constraint(equalToConstant: buttonWidthAnchor),
@@ -266,12 +281,43 @@ class MoviesGridViewController: UIViewController {
     }
     
     @objc func promptForAnswer () {
-        //More code to come regarding the action of the UIBarButton
+        let ac = UIAlertController(title: "What do you want to do?", message: nil, preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "View Profile", style: .default, handler: viewProfile))
+        ac.addAction(UIAlertAction(title: "Log out", style: .destructive, handler: logOut))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        ac.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        present (ac, animated: true)
     }
     
-    @objc func buttonAction (sender: UIButton!) {
+     func viewProfile (action: UIAlertAction) {
+         let mvc = ProfileViewController()
+         mvc.navigationController?.setNavigationBarHidden(false, animated: true)
+         navigationController?.pushViewController(mvc, animated: true)
+    }
+    
+     func logOut (action: UIAlertAction) {
+         let mvc = ViewController()
+         mvc.navigationItem.hidesBackButton = true
+         mvc.navigationController?.setNavigationBarHidden(false, animated: true)
+         navigationController?.pushViewController(mvc, animated: true)
+    }
+    
+    @objc func movieButtonAction (sender: UIButton!) {
         //More code to come regarding the action of the UIBarButton
         //        title = sender.title(for: .normal)
+        if let movieID: String = sender.title(for: .normal) {
+            let mvc = MovieInfoViewController()
+            mvc.release_date = detailsList[Int(movieID)!].release_date
+            mvc.overview = detailsList[Int(movieID)!].overview
+            mvc.backdrop_path = detailsList[Int(movieID)!].backdrop_path
+            mvc.vote_average = detailsList[Int(movieID)!].vote_average
+            mvc.poster_path = detailsList[Int(movieID)!].poster_path
+            mvc.original_title = detailsList[Int(movieID)!].original_title
+   
+        mvc.navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.pushViewController(mvc, animated: true)
+        }
+        
     }
     
     @objc func popularButtonAction (sender: UIButton!) {
@@ -279,7 +325,7 @@ class MoviesGridViewController: UIViewController {
         popularButton.backgroundColor = selectedButtonColor
         topRatedButton.backgroundColor = buttonColor
         onTvButton.backgroundColor = buttonColor
-       airingTodayButton.backgroundColor = buttonColor
+        airingTodayButton.backgroundColor = buttonColor
         title = "Popular"
         
         
@@ -291,7 +337,7 @@ class MoviesGridViewController: UIViewController {
         popularButton.backgroundColor = buttonColor
         topRatedButton.backgroundColor = selectedButtonColor
         onTvButton.backgroundColor = buttonColor
-       airingTodayButton.backgroundColor = buttonColor
+        airingTodayButton.backgroundColor = buttonColor
         title = "Top Rated"
         
     }
@@ -301,7 +347,7 @@ class MoviesGridViewController: UIViewController {
         popularButton.backgroundColor = buttonColor
         topRatedButton.backgroundColor = buttonColor
         onTvButton.backgroundColor = selectedButtonColor
-       airingTodayButton.backgroundColor = buttonColor
+        airingTodayButton.backgroundColor = buttonColor
         title = "On Tv"
         
     }
@@ -311,7 +357,7 @@ class MoviesGridViewController: UIViewController {
         popularButton.backgroundColor = buttonColor
         topRatedButton.backgroundColor = buttonColor
         onTvButton.backgroundColor = buttonColor
-       airingTodayButton.backgroundColor = selectedButtonColor
+        airingTodayButton.backgroundColor = selectedButtonColor
         
         title = "Airing Today"
         
@@ -331,6 +377,10 @@ class MoviesGridViewController: UIViewController {
         if let jsonMovieDetails = try? decoder.decode(MovieDetails.self, from: json) {
             release_date = jsonMovieDetails.release_date
             backdrop_path = jsonMovieDetails.backdrop_path
+            overview = jsonMovieDetails.overview
+            poster_path = jsonMovieDetails.poster_path
+            original_title = jsonMovieDetails.original_title
+            vote_average = jsonMovieDetails.vote_average
             
         }
         
